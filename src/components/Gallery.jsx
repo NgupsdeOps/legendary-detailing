@@ -2,73 +2,59 @@ import React from 'react';
 import { PlayCircle, Sparkles } from 'lucide-react';
 
 // ==========================================
-// 📸 HOW TO ADD YOUR OWN PHOTOS / VIDEOS:
+// 📸 THE CORRECT WAY TO SHOW IMAGES ON VERCEL:
 // ==========================================
-// 1. Paste your new image/video file inside your: "src/assets" folder.
-// 2. Import it at the top here like this:
-//    import wash1 from '../assets/wash1.png';
-//    import video1 from '../assets/video1.mp4';
-// 
-// 3. Add a new item block inside the "galleryItems" array below.
+// 1. Drop your images/videos inside: "src/assets/"
+// 2. IMPORT them at the top of this file.
 // ==========================================
 
-import heroBg from '../assets/hero.png'; // Using your Polo image as a placeholder for now
-import Wash1 from '../assets/Wash1.png';
-import enginewash from '../assets/enginewash.mp4';
+import carReflections from '../assets/wash1.png'; // Example Import
+import coatingApp from '../assets/wash2.png';      // Example Import
+import videoShowcase from '../assets/wash_video.mp4'; // Example Video Import
 
+// This is how you reference them in your list:
 const galleryItems = [
   { 
     id: 1, 
     type: 'image', 
-    url: heroBg, 
+    url: carReflections, // Use the imported variable, NOT a string path
     title: 'Showroom Reflection Finish' 
   },
- 
   { 
     id: 2, 
     type: 'image', 
-    url: Wash1, 
-    title: 'Best wash' 
+    url: coatingApp, // Use the imported variable
+    title: 'Ceramic Coating Application' 
   },
-
   { 
     id: 3, 
     type: 'video', 
-    url: enginewash, 
-    title: 'Engine Bay Detailing' 
-  },
-  { 
-    id: 4, 
-    type: 'image', 
-    url: 'https://images.unsplash.com/photo-1563720223185-11003d516935?q=80&w=600&auto=format&fit=crop', 
-    title: 'Premium Leather Treatment' 
+    url: videoShowcase, // Use the imported variable
+    title: 'Full Polish Video Tour' 
   }
 ];
+
+// ... rest of your Gallery component stays the same ...
 
 export default function Gallery() {
   return (
     <section id="gallery" className="py-24 px-6 bg-neutral-950 border-t border-neutral-900">
       <div className="max-w-7xl mx-auto">
-        
-        {/* Title */}
         <div className="text-center mb-16">
-          <span className="text-red-500 font-extrabold text-xs uppercase tracking-widest mb-3 inline-block">
-            Our Portfolio
-          </span>
           <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tight text-white mb-4">
             Our Work <span className="text-red-600">Showcase</span>
           </h2>
           <p className="text-neutral-400 max-w-lg mx-auto text-sm md:text-base">
-            Real results. Take a look at the immaculate finishes produced by the Legendary Detailing team.
+            Take a look at the immaculate finishes produced by the Legendary Detailing team.
           </p>
         </div>
 
-        {/* Media Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* 🎨 Mobile-First Grid Setup */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {galleryItems.map((item) => (
             <div 
               key={item.id} 
-              className="group relative rounded-2xl overflow-hidden aspect-video bg-neutral-900 border border-neutral-900 hover:border-red-600/40 transition-all duration-300 shadow-lg"
+              className="group relative rounded-2xl overflow-hidden aspect-[4/3] bg-neutral-900 border border-neutral-900 hover:border-red-600/40 transition-all duration-300 shadow-xl"
             >
               {item.type === 'video' ? (
                 <div className="relative w-full h-full">
@@ -85,7 +71,6 @@ export default function Gallery() {
                 />
               )}
               
-              {/* Premium Hover Overlay Title */}
               <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6 pointer-events-none">
                 <div className="flex items-center gap-2">
                   <Sparkles size={16} className="text-red-500" />
@@ -95,7 +80,6 @@ export default function Gallery() {
             </div>
           ))}
         </div>
-        
       </div>
     </section>
   );
