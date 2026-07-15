@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Calendar, Clock, Car, Mail, Phone, User } from 'lucide-react';
 
-export default function BookingForm({ setModalType }) {
+export default function BookingForm() {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -17,160 +16,246 @@ export default function BookingForm({ setModalType }) {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData({ 
-      ...formData, 
-      [name]: type === 'checkbox' ? checked : value 
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!formData.agree) {
+      alert("Please agree to the Terms & Conditions and Privacy Policy to proceed.");
+      return;
+    }
+
+    // Prepare standard FormData so Formspree reads it perfectly
+    const submissionData = new FormData();
+    Object.keys(formData).forEach((key) => {
+      submissionData.append(key, formData[key]);
     });
+
+    try {
+      // ⚠️ REPLACE YOUR_FORMSPREE_ID_HERE WITH YOUR ACTUAL FORMSPREE KEY (e.g. xoqovwzd)
+      const response = await fetch("https://formspree.io/f/YOUR_FORMSPREE_ID_HERE", {
+        method: "POST",
+        body: submissionData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        alert("Booking request received successfully! We will contact you shortly.");
+        // Reset state
+        setFormData({
+          name: '',
+          phone: '',
+          email: '',
+          carDetails: '',
+          service: 'Valet Package - R850',
+          location: '19 Alabaster ave, Mayfield Park (Location 1)',
+          date: '',
+          time: '',
+          notes: '',
+          agree: false
+        });
+      } else {
+        alert("Oops! Something went wrong. Please try again or reach out to us via WhatsApp.");
+      }
+    } catch (error) {
+      alert("Network error. Please check your internet connection and try again.");
+    }
   };
 
   return (
-    <section id="book" className="py-24 px-6 bg-neutral-950 border-t border-neutral-900">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tight text-white mb-4">
-            Book an <span className="text-red-600">Appointment</span>
+    <section id="booking" className="py-16 px-4 md:px-8 bg-neutral-950 text-white">
+      <div className="max-w-2xl mx-auto bg-neutral-900 border border-neutral-800 p-6 md:p-10 rounded-3xl shadow-2xl">
+        
+        <div className="text-center mb-8">
+          <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight text-white mb-2">
+            Book <span className="text-red-600">Now</span>
           </h2>
-          <p className="text-neutral-400 text-sm md:text-base">
-            Secure your spot. All work is strictly by appointment. Once submitted, we will send an estimate/invoice directly to your email.
+          <p className="text-neutral-400 text-sm">
+            Secure your premium detailing service. We will confirm your slot via call or WhatsApp.
           </p>
         </div>
 
-        <form 
-          action="https://formspree.io/f/your-formspree-id" 
-          method="POST"
-          className="bg-neutral-900/40 border border-neutral-900 p-8 md:p-12 rounded-3xl space-y-8 shadow-2xl"
-        >
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Full Name */}
+        <form onSubmit={handleSubmit} method="POST" className="space-y-6">
+          
+          {/* Name & Phone Group */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-widest text-neutral-500 mb-2">Full Name</label>
-              <div className="relative">
-                <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-neutral-600"><User size={18} /></span>
-                <input required type="text" name="name" value={formData.name} onChange={handleChange} className="w-full pl-11 pr-4 py-3 bg-neutral-950 border border-neutral-900 rounded-xl focus:border-red-600 focus:outline-none transition-colors text-white text-sm" placeholder="e.g. Sipho Nkosi" />
-              </div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">
+                Full Name
+              </label>
+              <input
+                type="text"
+                name="name"
+                required
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="John Doe"
+                className="w-full bg-neutral-950 border border-neutral-800 focus:border-red-600 text-white px-4 py-3.5 rounded-xl transition-colors duration-200"
+              />
             </div>
 
-            {/* Phone Number */}
             <div>
-              <label className="block text-xs font-bold uppercase tracking-widest text-neutral-500 mb-2">Phone / WhatsApp</label>
-              <div className="relative">
-                <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-neutral-600"><Phone size={18} /></span>
-                <input required type="tel" name="phone" value={formData.phone} onChange={handleChange} className="w-full pl-11 pr-4 py-3 bg-neutral-950 border border-neutral-900 rounded-xl focus:border-red-600 focus:outline-none transition-colors text-white text-sm" placeholder="e.g. 074 835 2488" />
-              </div>
-            </div>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Email */}
-            <div>
-              <label className="block text-xs font-bold uppercase tracking-widest text-neutral-500 mb-2">Email Address (For Invoice)</label>
-              <div className="relative">
-                <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-neutral-600"><Mail size={18} /></span>
-                <input required type="email" name="email" value={formData.email} onChange={handleChange} className="w-full pl-11 pr-4 py-3 bg-neutral-950 border border-neutral-900 rounded-xl focus:border-red-600 focus:outline-none transition-colors text-white text-sm" placeholder="e.g. client@gmail.com" />
-              </div>
-            </div>
-
-            {/* Vehicle Details */}
-            <div>
-              <label className="block text-xs font-bold uppercase tracking-widest text-neutral-500 mb-2">Vehicle Make, Model & Colour</label>
-              <div className="relative">
-                <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-neutral-600"><Car size={18} /></span>
-                <input required type="text" name="carDetails" value={formData.carDetails} onChange={handleChange} className="w-full pl-11 pr-4 py-3 bg-neutral-950 border border-neutral-900 rounded-xl focus:border-red-600 focus:outline-none transition-colors text-white text-sm" placeholder="e.g. BMW M3 (Metallic Blue)" />
-              </div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">
+                WhatsApp / Phone Number
+              </label>
+              <input
+                type="tel"
+                name="phone"
+                required
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="082 123 4567"
+                className="w-full bg-neutral-950 border border-neutral-800 focus:border-red-600 text-white px-4 py-3.5 rounded-xl transition-colors duration-200"
+              />
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Service */}
-            <div>
-              <label className="block text-xs font-bold uppercase tracking-widest text-neutral-500 mb-2">Select Service</label>
-              <select name="service" value={formData.service} onChange={handleChange} className="w-full px-4 py-3 bg-neutral-950 border border-neutral-900 rounded-xl focus:border-red-600 focus:outline-none transition-colors text-white text-sm">
-                <option>Standard Detail - R250</option>
-                <option>Premium Detail - R500</option>
-                <option>Full Detail - R1500</option>
-                <option>Enhancement Detail - R1500</option>
-                <option>Stage 1 Detail - R2500</option>
-                <option>Stage 2 Detail - R4500</option>
-                <option>Undercarriage Wash - R300</option>
-                <option>Engine Wash - R200</option>
-              </select>
-            </div>
-
-            {/* Location */}
-            <div>
-              <label className="block text-xs font-bold uppercase tracking-widest text-neutral-500 mb-2">Preferred Location</label>
-              <select name="location" value={formData.location} onChange={handleChange} className="w-full px-4 py-3 bg-neutral-950 border border-neutral-900 rounded-xl focus:border-red-600 focus:outline-none transition-colors text-white text-sm">
-                <option>19 Alabaster ave, Mayfield Park (Location 1)</option>
-                <option>121 Sycamore st, Alveda park (Location 2)</option>
-                <option>Mobile Valet (Home Delivery)</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Date */}
-            <div>
-              <label className="block text-xs font-bold uppercase tracking-widest text-neutral-500 mb-2">Preferred Date</label>
-              <div className="relative">
-                <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-neutral-600"><Calendar size={18} /></span>
-                <input required type="date" name="date" value={formData.date} onChange={handleChange} className="w-full pl-11 pr-4 py-3 bg-neutral-950 border border-neutral-900 rounded-xl focus:border-red-600 focus:outline-none transition-colors text-white text-sm" />
-              </div>
-            </div>
-
-            {/* Time */}
-            <div>
-              <label className="block text-xs font-bold uppercase tracking-widest text-neutral-500 mb-2">Preferred Time (8am - 5pm)</label>
-              <div className="relative">
-                <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-neutral-600"><Clock size={18} /></span>
-                <input required type="time" name="time" min="08:00" max="17:00" value={formData.time} onChange={handleChange} className="w-full pl-11 pr-4 py-3 bg-neutral-950 border border-neutral-900 rounded-xl focus:border-red-600 focus:outline-none transition-colors text-white text-sm" />
-              </div>
-            </div>
-          </div>
-
-          {/* Notes */}
+          {/* Email Address */}
           <div>
-            <label className="block text-xs font-bold uppercase tracking-widest text-neutral-500 mb-2">Special Instructions (Optional)</label>
-            <textarea name="notes" value={formData.notes} onChange={handleChange} rows="3" className="w-full px-4 py-3 bg-neutral-950 border border-neutral-900 rounded-xl focus:border-red-600 focus:outline-none transition-colors text-white text-sm" placeholder="Let us know of any heavily soiled spots, dog hair, or special requirements..."></textarea>
+            <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">
+              Email Address
+            </label>
+            <input
+              type="email"
+              name="email"
+              required
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="johndoe@gmail.com"
+              className="w-full bg-neutral-950 border border-neutral-800 focus:border-red-600 text-white px-4 py-3.5 rounded-xl transition-colors duration-200"
+            />
           </div>
 
-          {/* Checkbox with Fully Clickable Popup Hooks */}
-          <div className="flex items-start gap-3">
-            <input 
-              required 
-              type="checkbox" 
-              id="agree" 
-              name="agree" 
-              checked={formData.agree} 
-              onChange={handleChange} 
-              className="mt-1 accent-red-600 h-4 w-4 rounded border-neutral-900 bg-neutral-950 cursor-pointer" 
+          {/* Vehicle Info */}
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">
+              Vehicle Make, Model & Colour
+            </label>
+            <input
+              type="text"
+              name="carDetails"
+              required
+              value={formData.carDetails}
+              onChange={handleChange}
+              placeholder="e.g., VW Golf 8 GTI, White"
+              className="w-full bg-neutral-950 border border-neutral-800 focus:border-red-600 text-white px-4 py-3.5 rounded-xl transition-colors duration-200"
             />
-            <label htmlFor="agree" className="text-xs text-neutral-400 leading-normal">
-              I agree to the{' '}
-              <button 
-                type="button" 
-                onClick={() => setModalType('terms')} 
-                className="text-red-500 hover:underline cursor-pointer font-bold focus:outline-none"
-              >
-                Terms & Conditions
-              </button>{' '}
-              and understand that my booking details are securely managed in line with the{' '}
-              <button 
-                type="button" 
-                onClick={() => setModalType('privacy')} 
-                className="text-red-500 hover:underline cursor-pointer font-bold focus:outline-none"
-              >
-                Privacy Policy
-              </button>.
+          </div>
+
+          {/* Service Option */}
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">
+              Select Package
+            </label>
+            <select
+              name="service"
+              value={formData.service}
+              onChange={handleChange}
+              className="w-full bg-neutral-950 border border-neutral-800 focus:border-red-600 text-white px-4 py-3.5 rounded-xl transition-colors duration-200"
+            >
+              <option value="Valet Package - R850">Valet Package - R850</option>
+              <option value="Showroom Polish - R1500">Showroom Polish - R1500</option>
+              <option value="Ceramic Protection - R3500">Ceramic Protection - R3500</option>
+            </select>
+          </div>
+
+          {/* Location Choice */}
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">
+              Preferred Location
+            </label>
+            <select
+              name="location"
+              value={formData.location}
+              onChange={handleChange}
+              className="w-full bg-neutral-950 border border-neutral-800 focus:border-red-600 text-white px-4 py-3.5 rounded-xl transition-colors duration-200"
+            >
+              <option value="19 Alabaster ave, Mayfield Park (Location 1)">
+                19 Alabaster ave, Mayfield Park (Location 1)
+              </option>
+              <option value="Mobile Detailing (At your home/office)">
+                Mobile Detailing (At your home/office)
+              </option>
+            </select>
+          </div>
+
+          {/* Date & Time Group */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">
+                Preferred Date
+              </label>
+              <input
+                type="date"
+                name="date"
+                required
+                value={formData.date}
+                onChange={handleChange}
+                className="w-full bg-neutral-950 border border-neutral-800 focus:border-red-600 text-white px-4 py-3.5 rounded-xl transition-colors duration-200"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">
+                Preferred Time (8AM - 5PM)
+              </label>
+              <input
+                type="time"
+                name="time"
+                required
+                value={formData.time}
+                onChange={handleChange}
+                className="w-full bg-neutral-950 border border-neutral-800 focus:border-red-600 text-white px-4 py-3.5 rounded-xl transition-colors duration-200"
+              />
+            </div>
+          </div>
+
+          {/* Notes Box */}
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">
+              Special Instructions (Optional)
+            </label>
+            <textarea
+              name="notes"
+              value={formData.notes}
+              onChange={handleChange}
+              rows="3"
+              placeholder="Let us know if you have dog hair, heavy water stains, etc."
+              className="w-full bg-neutral-950 border border-neutral-800 focus:border-red-600 text-white px-4 py-3.5 rounded-xl transition-colors duration-200 resize-none"
+            />
+          </div>
+
+          {/* Terms Checkbox */}
+          <div className="flex items-start gap-3">
+            <input
+              type="checkbox"
+              id="agree"
+              name="agree"
+              required
+              checked={formData.agree}
+              onChange={handleChange}
+              className="mt-1 h-4 w-4 rounded border-neutral-800 bg-neutral-950 text-red-600 focus:ring-0 focus:ring-offset-0"
+            />
+            <label htmlFor="agree" className="text-xs text-neutral-400 leading-relaxed">
+              I agree to the <span className="text-red-500 underline cursor-pointer">Terms & Conditions</span> and understand that my booking details are securely managed.
             </label>
           </div>
 
-          <button 
-            type="submit" 
-            disabled={!formData.agree}
-            className="w-full py-4 bg-red-600 hover:bg-red-700 disabled:bg-neutral-800 disabled:text-neutral-500 disabled:cursor-not-allowed text-white font-black uppercase tracking-widest rounded-xl transition-all duration-300 shadow-xl shadow-red-600/20 text-sm"
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="w-full bg-red-600 hover:bg-red-700 text-white font-bold uppercase tracking-wider py-4 rounded-xl transition-colors duration-200 shadow-lg shadow-red-900/20"
           >
-            Submit Booking & Generate Quotation
+            Submit Booking Request
           </button>
+
         </form>
       </div>
     </section>
