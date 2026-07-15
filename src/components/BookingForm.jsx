@@ -6,11 +6,10 @@ export default function BookingForm({ setModalType }) {
     phone: '',
     email: '',
     carDetails: '',
-    service: 'Standard Detail',
-    // Track selected add-ons as an array
+    service: 'Standard Detail - R250',
     addons: [],
     location: '19 Alabaster ave, Mayfield Park (Location 1)',
-    address: '', // To store mobile address
+    address: '', 
     date: '',
     time: '',
     notes: '',
@@ -27,7 +26,6 @@ export default function BookingForm({ setModalType }) {
     }));
   };
 
-  // Handle Add-on checkbox selections
   const handleAddonChange = (addonName, isChecked) => {
     setFormData((prev) => {
       const updatedAddons = isChecked
@@ -46,7 +44,6 @@ export default function BookingForm({ setModalType }) {
     }
 
     const submissionData = new FormData();
-    // Append standard fields
     Object.keys(formData).forEach((key) => {
       if (key === 'addons') {
         submissionData.append('Selected Add-ons', formData.addons.join(', '));
@@ -56,8 +53,10 @@ export default function BookingForm({ setModalType }) {
     });
 
     try {
-      // ⚠️ Make sure your real Formspree ID is placed here
-      const response = await fetch("https://formspree.io/f/YOUR_FORMSPREE_ID_HERE", {
+      // 🚨 REPLACE THE ID BELOW WITH YOUR REAL FORMSPREE ID! (e.g., xanyvweb)
+      const FORMSPREE_ID = "mreneeyp"; 
+
+      const response = await fetch(`https://formspree.io/f/mreneeyp`, {
         method: "POST",
         body: submissionData,
         headers: {
@@ -69,12 +68,12 @@ export default function BookingForm({ setModalType }) {
         setIsSubmitted(true);
         setFormData({
           name: '', phone: '', email: '', carDetails: '',
-          service: 'Standard Detail', addons: [],
+          service: 'Standard Detail - R250', addons: [],
           location: '19 Alabaster ave, Mayfield Park (Location 1)', address: '',
           date: '', time: '', notes: '', agree: false
         });
       } else {
-        alert("Oops! Something went wrong. Please try again or reach out to us via WhatsApp.");
+        alert("Oops! Something went wrong. Please check that your Formspree ID is set correctly, or contact us on WhatsApp.");
       }
     } catch (error) {
       alert("Network error. Please check your internet connection and try again.");
@@ -164,7 +163,7 @@ export default function BookingForm({ setModalType }) {
             </div>
           </div>
 
-          {/* Core Package Dropdown */}
+          {/* Packages with Prices */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">
               Select Package
@@ -173,15 +172,15 @@ export default function BookingForm({ setModalType }) {
               name="service" value={formData.service} onChange={handleChange}
               className="w-full bg-neutral-950 border border-neutral-800 focus:border-red-600 text-white px-4 py-3.5 rounded-xl transition-colors duration-200"
             >
-              <option value="Standard Detail">Standard Detail</option>
-              <option value="Premium Detail">Premium Detail</option>
-              <option value="Executive Valet">Executive Valet</option>
-              <option value="Machine Glaze & Polish">Machine Glaze & Polish</option>
-              <option value="Ceramic Coating Application">Ceramic Coating Application</option>
+              <option value="Standard Detail - R250">Standard Detail — R250</option>
+              <option value="Premium Detail - R850">Premium Detail / Valet — R850</option>
+              <option value="Executive Valet - R1200">Executive Valet — R1200</option>
+              <option value="Machine Glaze & Polish - R1500">Machine Glaze & Polish — R1500</option>
+              <option value="Ceramic Coating Application - R3500">Ceramic Coating Application — R3500</option>
             </select>
           </div>
 
-          {/* Optional Add-on Extras Checkboxes */}
+          {/* Optional Extras Checkboxes */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-3">
               Optional Add-ons & Extras
@@ -201,7 +200,7 @@ export default function BookingForm({ setModalType }) {
                     type="checkbox"
                     checked={formData.addons.includes(addon.name)}
                     onChange={(e) => handleAddonChange(addon.name, e.target.checked)}
-                    className="h-4 w-4 rounded border-neutral-800 bg-neutral-900 text-red-600 focus:ring-0 focus:ring-offset-0"
+                    className="h-4 w-4 rounded border-neutral-800 bg-neutral-900 text-red-600 focus:ring-0"
                   />
                   {addon.name}
                 </label>
@@ -209,7 +208,7 @@ export default function BookingForm({ setModalType }) {
             </div>
           </div>
 
-          {/* Location Dropdown */}
+          {/* Expanded Locations (Location 1, Location 2, and Mobile) */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">
               Preferred Location
@@ -221,13 +220,16 @@ export default function BookingForm({ setModalType }) {
               <option value="19 Alabaster ave, Mayfield Park (Location 1)">
                 19 Alabaster ave, Mayfield Park (Location 1)
               </option>
+              <option value="Alveda Park (Location 2)">
+                Alveda Park (Location 2)
+              </option>
               <option value="Mobile Detailing (We come to you)">
                 Mobile Detailing (We come to you)
               </option>
             </select>
           </div>
 
-          {/* Dynamic Address Box (Appears only if Mobile Detailing is selected) */}
+          {/* Address Box (Only for Mobile Detailing) */}
           {formData.location.includes("Mobile Detailing") && (
             <div className="animate-fadeIn">
               <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">
@@ -275,7 +277,7 @@ export default function BookingForm({ setModalType }) {
             />
           </div>
 
-          {/* Terms Checkbox with clickable triggers */}
+          {/* Clickable Terms Checkbox */}
           <div className="flex items-start gap-3">
             <input
               type="checkbox" id="agree" name="agree" required checked={formData.agree} onChange={handleChange}
