@@ -1,31 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* 🛡️ Pure vanilla CSS to avoid Tailwind v4 compiler bugs */
-html, body {
-  background-color: #0a0a0a; /* Equivalent to bg-neutral-950 */
-  color: #d4d4d4;            /* Equivalent to text-neutral-300 */
-  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
-  max-width: 100vw;
-}
-
-/* 🎨 Modernize form elements for mobile responsiveness */
-input, select, textarea {
-  width: 100%;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  font-size: 16px !important; /* Disables auto-zoom on iPhones */
-}
-
-/* 🔧 Text overflow wraps */
-h1, h2, h3, h4, p, span {
-  word-break: break-word;
-}
