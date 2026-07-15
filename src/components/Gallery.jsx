@@ -8,10 +8,17 @@ import { PlayCircle, Sparkles } from 'lucide-react';
 // 2. IMPORT them at the top of this file.
 // ==========================================
 
-import carReflections from '../assets/Wash1.png'; // Capital W to match your folder!
-import coatingApp from '../assets/hero.png';        // Using hero.png since wash2.png doesn't exist
+import carReflections from '../assets/JG.png'; // Capital W to match your folder!
+import coatingApp from '../assets/HR TSI.png';        // Using hero.png since wash2.png doesn't exist
 import videoShowcase from '../assets/enginewash.mp4'; // Using enginewash.mp4 instead of wash_video.mp4
+import redgolf from '../assets/redgolf.png';
+import TSIENGINE from '../assets/TSIENGINE.png';
+import FDTYRES from '../assets/FDTYRES.mp4';
+import classic from '../assets/classic.png';
+
 // This is how you reference them in your list:
+
+
 const galleryItems = [
   { 
     id: 1, 
@@ -30,7 +37,27 @@ const galleryItems = [
     type: 'video', 
     url: videoShowcase, // Use the imported variable
     title: 'Full Polish Video Tour' 
+  },
+{ 
+    id: 4, 
+    type: 'image', 
+    url: redgolf, // Use the imported variable
+    title: 'Red Golf Showcase' 
+  },
+{ 
+    id: 5, 
+    type: 'image', 
+    url: TSIENGINE, // Use the imported variable
+    title: 'TSI Engine Detailing' 
+  },
+{ 
+    id: 6, 
+    type: 'video', 
+    url: FDTYRES, // Use the imported variable
+    title: 'Full Tire Detailing' 
   }
+
+
 ];
 
 // ... rest of your Gallery component stays the same ...

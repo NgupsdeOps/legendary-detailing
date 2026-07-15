@@ -1,6 +1,6 @@
 import React from 'react';
 import { ShieldCheck, CalendarRange, MapPin } from 'lucide-react';
-import heroBg from '../assets/hero.png';
+import heroBg from '../assets/madza.png';
 import logo from '../assets/logo.png'; // Importing your custom logo
 
 export default function Hero() {
@@ -21,11 +21,11 @@ export default function Hero() {
 
         {/* Large Logo with Premium Red Backlight Glow */}
         <div className="flex justify-center mb-8">
-          <img 
-            src={logo} 
-            alt="Legendary Detailing" 
-            className="h-36 md:h-56 w-auto object-contain filter drop-shadow-[0_0_35px_rgba(220,38,38,0.55)] transition-all duration-500 hover:scale-105 cursor-pointer"
-          />
+        <img 
+  src={logo} 
+  alt="Legendary Detailing" 
+  className="mx-auto w-full max-w-lg h-auto mix-blend-screen object-contain" 
+/>
         </div>
 
         <p className="text-neutral-300 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed drop-shadow-md">
