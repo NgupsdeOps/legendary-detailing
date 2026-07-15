@@ -1,20 +1,22 @@
 import React, { useState } from 'react';
 
-export default function BookingForm() {
+export default function BookingForm({ setModalType }) {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
     email: '',
     carDetails: '',
-    service: 'Valet Package - R850',
+    service: 'Standard Detail',
+    // Track selected add-ons as an array
+    addons: [],
     location: '19 Alabaster ave, Mayfield Park (Location 1)',
+    address: '', // To store mobile address
     date: '',
     time: '',
     notes: '',
     agree: false
   });
 
-  // Track if the form has been successfully submitted to change layouts
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleChange = (e) => {
@@ -25,22 +27,37 @@ export default function BookingForm() {
     }));
   };
 
+  // Handle Add-on checkbox selections
+  const handleAddonChange = (addonName, isChecked) => {
+    setFormData((prev) => {
+      const updatedAddons = isChecked
+        ? [...prev.addons, addonName]
+        : prev.addons.filter((item) => item !== addonName);
+      return { ...prev, addons: updatedAddons };
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!formData.agree) {
-      alert("Please agree to the Terms & Conditions and Privacy Policy to proceed.");
+      alert("Please agree to the Terms & Conditions to proceed.");
       return;
     }
 
     const submissionData = new FormData();
+    // Append standard fields
     Object.keys(formData).forEach((key) => {
-      submissionData.append(key, formData[key]);
+      if (key === 'addons') {
+        submissionData.append('Selected Add-ons', formData.addons.join(', '));
+      } else {
+        submissionData.append(key, formData[key]);
+      }
     });
 
     try {
-      // ⚠️ Make sure your real Formspree ID is placed here (e.g., xanyvweb)
-      const response = await fetch("https://formspree.io/f/mreneeyp", {
+      // ⚠️ Make sure your real Formspree ID is placed here
+      const response = await fetch("https://formspree.io/f/YOUR_FORMSPREE_ID_HERE", {
         method: "POST",
         body: submissionData,
         headers: {
@@ -49,21 +66,12 @@ export default function BookingForm() {
       });
 
       if (response.ok) {
-        // Switch the view to the custom success message layout
         setIsSubmitted(true);
-        
-        // Reset the form values back to empty defaults
         setFormData({
-          name: '',
-          phone: '',
-          email: '',
-          carDetails: '',
-          service: 'Valet Package - R850',
-          location: '19 Alabaster ave, Mayfield Park (Location 1)',
-          date: '',
-          time: '',
-          notes: '',
-          agree: false
+          name: '', phone: '', email: '', carDetails: '',
+          service: 'Standard Detail', addons: [],
+          location: '19 Alabaster ave, Mayfield Park (Location 1)', address: '',
+          date: '', time: '', notes: '', agree: false
         });
       } else {
         alert("Oops! Something went wrong. Please try again or reach out to us via WhatsApp.");
@@ -73,7 +81,6 @@ export default function BookingForm() {
     }
   };
 
-  // 🌟 BEAUTIFUL SUCCESS MESSAGE LAYOUT 🌟
   if (isSubmitted) {
     return (
       <section id="booking" className="py-16 px-4 bg-neutral-950 text-white text-center">
@@ -98,7 +105,6 @@ export default function BookingForm() {
     );
   }
 
-  // STANDARD FORM LAYOUT (Shows when isSubmitted is false)
   return (
     <section id="booking" className="py-16 px-4 md:px-8 bg-neutral-950 text-white">
       <div className="max-w-2xl mx-auto bg-neutral-900 border border-neutral-800 p-6 md:p-10 rounded-3xl shadow-2xl">
@@ -114,171 +120,180 @@ export default function BookingForm() {
 
         <form onSubmit={handleSubmit} method="POST" className="space-y-6">
           
-          {/* Name & Phone Group */}
+          {/* Name & Phone */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">
                 Full Name
               </label>
               <input
-                type="text"
-                name="name"
-                required
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="John Doe"
+                type="text" name="name" required value={formData.name} onChange={handleChange} placeholder="John Doe"
                 className="w-full bg-neutral-950 border border-neutral-800 focus:border-red-600 text-white px-4 py-3.5 rounded-xl transition-colors duration-200"
               />
             </div>
-
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">
                 WhatsApp / Phone Number
               </label>
               <input
-                type="tel"
-                name="phone"
-                required
-                value={formData.phone}
-                onChange={handleChange}
-                placeholder="082 123 4567"
+                type="tel" name="phone" required value={formData.phone} onChange={handleChange} placeholder="082 123 4567"
                 className="w-full bg-neutral-950 border border-neutral-800 focus:border-red-600 text-white px-4 py-3.5 rounded-xl transition-colors duration-200"
               />
             </div>
           </div>
 
-          {/* Email Address */}
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">
-              Email Address
-            </label>
-            <input
-              type="email"
-              name="email"
-              required
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="johndoe@gmail.com"
-              className="w-full bg-neutral-950 border border-neutral-800 focus:border-red-600 text-white px-4 py-3.5 rounded-xl transition-colors duration-200"
-            />
+          {/* Email & Vehicle */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">
+                Email Address
+              </label>
+              <input
+                type="email" name="email" required value={formData.email} onChange={handleChange} placeholder="johndoe@gmail.com"
+                className="w-full bg-neutral-950 border border-neutral-800 focus:border-red-600 text-white px-4 py-3.5 rounded-xl transition-colors duration-200"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">
+                Vehicle Make, Model & Colour
+              </label>
+              <input
+                type="text" name="carDetails" required value={formData.carDetails} onChange={handleChange} placeholder="e.g., VW Golf 8 GTI, White"
+                className="w-full bg-neutral-950 border border-neutral-800 focus:border-red-600 text-white px-4 py-3.5 rounded-xl transition-colors duration-200"
+              />
+            </div>
           </div>
 
-          {/* Vehicle Info */}
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">
-              Vehicle Make, Model & Colour
-            </label>
-            <input
-              type="text"
-              name="carDetails"
-              required
-              value={formData.carDetails}
-              onChange={handleChange}
-              placeholder="e.g., VW Golf 8 GTI, White"
-              className="w-full bg-neutral-950 border border-neutral-800 focus:border-red-600 text-white px-4 py-3.5 rounded-xl transition-colors duration-200"
-            />
-          </div>
-
-          {/* Service Option */}
+          {/* Core Package Dropdown */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">
               Select Package
             </label>
             <select
-              name="service"
-              value={formData.service}
-              onChange={handleChange}
+              name="service" value={formData.service} onChange={handleChange}
               className="w-full bg-neutral-950 border border-neutral-800 focus:border-red-600 text-white px-4 py-3.5 rounded-xl transition-colors duration-200"
             >
-              <option value="Valet Package - R850">Valet Package - R850</option>
-              <option value="Showroom Polish - R1500">Showroom Polish - R1500</option>
-              <option value="Ceramic Protection - R3500">Ceramic Protection - R3500</option>
+              <option value="Standard Detail">Standard Detail</option>
+              <option value="Premium Detail">Premium Detail</option>
+              <option value="Executive Valet">Executive Valet</option>
+              <option value="Machine Glaze & Polish">Machine Glaze & Polish</option>
+              <option value="Ceramic Coating Application">Ceramic Coating Application</option>
             </select>
           </div>
 
-          {/* Location Choice */}
+          {/* Optional Add-on Extras Checkboxes */}
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-3">
+              Optional Add-ons & Extras
+            </label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 bg-neutral-950 p-4 rounded-2xl border border-neutral-800">
+              {[
+                { name: 'Waxes Add-on (from R150)', value: 'Waxes' },
+                { name: 'Sealants Add-on (from R250)', value: 'Sealants' },
+                { name: 'Machine Glaze (from R650)', value: 'Machine Glaze' },
+                { name: 'Fabric Protectant (from R400)', value: 'Fabric Protectant' },
+                { name: 'Ceramic Coating Extra (from R1500)', value: 'Ceramic Coating' },
+                { name: 'Headlights Restoration (from R550)', value: 'Headlights' },
+                { name: 'Plastic Coatings (from R850)', value: 'Plastic Coatings' }
+              ].map((addon) => (
+                <label key={addon.value} className="flex items-center gap-3 cursor-pointer text-xs text-neutral-300 hover:text-white transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={formData.addons.includes(addon.name)}
+                    onChange={(e) => handleAddonChange(addon.name, e.target.checked)}
+                    className="h-4 w-4 rounded border-neutral-800 bg-neutral-900 text-red-600 focus:ring-0 focus:ring-offset-0"
+                  />
+                  {addon.name}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Location Dropdown */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">
               Preferred Location
             </label>
             <select
-              name="location"
-              value={formData.location}
-              onChange={handleChange}
+              name="location" value={formData.location} onChange={handleChange}
               className="w-full bg-neutral-950 border border-neutral-800 focus:border-red-600 text-white px-4 py-3.5 rounded-xl transition-colors duration-200"
             >
               <option value="19 Alabaster ave, Mayfield Park (Location 1)">
                 19 Alabaster ave, Mayfield Park (Location 1)
               </option>
-              <option value="Mobile Detailing (At your home/office)">
-                Mobile Detailing (At your home/office)
+              <option value="Mobile Detailing (We come to you)">
+                Mobile Detailing (We come to you)
               </option>
             </select>
           </div>
 
-          {/* Date & Time Group */}
+          {/* Dynamic Address Box (Appears only if Mobile Detailing is selected) */}
+          {formData.location.includes("Mobile Detailing") && (
+            <div className="animate-fadeIn">
+              <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">
+                Your Address for Mobile Service
+              </label>
+              <input
+                type="text" name="address" required value={formData.address} onChange={handleChange}
+                placeholder="e.g. 123 Street Name, Suburb, Johannesburg"
+                className="w-full bg-neutral-950 border border-red-600/50 focus:border-red-600 text-white px-4 py-3.5 rounded-xl transition-colors duration-200"
+              />
+            </div>
+          )}
+
+          {/* Date & Time */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">
                 Preferred Date
               </label>
               <input
-                type="date"
-                name="date"
-                required
-                value={formData.date}
-                onChange={handleChange}
+                type="date" name="date" required value={formData.date} onChange={handleChange}
                 className="w-full bg-neutral-950 border border-neutral-800 focus:border-red-600 text-white px-4 py-3.5 rounded-xl transition-colors duration-200"
               />
             </div>
-
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">
                 Preferred Time (8AM - 5PM)
               </label>
               <input
-                type="time"
-                name="time"
-                required
-                value={formData.time}
-                onChange={handleChange}
+                type="time" name="time" required value={formData.time} onChange={handleChange}
                 className="w-full bg-neutral-950 border border-neutral-800 focus:border-red-600 text-white px-4 py-3.5 rounded-xl transition-colors duration-200"
               />
             </div>
           </div>
 
-          {/* Notes Box */}
+          {/* Notes */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">
               Special Instructions (Optional)
             </label>
             <textarea
-              name="notes"
-              value={formData.notes}
-              onChange={handleChange}
-              rows="3"
+              name="notes" value={formData.notes} onChange={handleChange} rows="3"
               placeholder="Let us know if you have dog hair, heavy water stains, etc."
               className="w-full bg-neutral-950 border border-neutral-800 focus:border-red-600 text-white px-4 py-3.5 rounded-xl transition-colors duration-200 resize-none"
             />
           </div>
 
-          {/* Terms Checkbox */}
+          {/* Terms Checkbox with clickable triggers */}
           <div className="flex items-start gap-3">
             <input
-              type="checkbox"
-              id="agree"
-              name="agree"
-              required
-              checked={formData.agree}
-              onChange={handleChange}
-              className="mt-1 h-4 w-4 rounded border-neutral-800 bg-neutral-950 text-red-600 focus:ring-0 focus:ring-offset-0"
+              type="checkbox" id="agree" name="agree" required checked={formData.agree} onChange={handleChange}
+              className="mt-1 h-4 w-4 rounded border-neutral-800 bg-neutral-950 text-red-600 focus:ring-0"
             />
             <label htmlFor="agree" className="text-xs text-neutral-400 leading-relaxed">
-              I agree to the <span className="text-red-500 underline cursor-pointer">Terms & Conditions</span> and understand that my booking details are securely managed.
+              I agree to the{" "}
+              <span 
+                onClick={() => setModalType('terms')} 
+                className="text-red-500 underline cursor-pointer hover:text-red-400"
+              >
+                Terms & Conditions
+              </span>{" "}
+              and understand that my booking details are securely managed.
             </label>
           </div>
 
-          {/* Submit Button */}
+          {/* Submit */}
           <button
             type="submit"
             className="w-full bg-red-600 hover:bg-red-700 text-white font-bold uppercase tracking-wider py-4 rounded-xl transition-colors duration-200 shadow-lg shadow-red-900/20"

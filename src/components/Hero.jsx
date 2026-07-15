@@ -24,7 +24,7 @@ export default function Hero() {
         <img 
   src={logo} 
   alt="Legendary Detailing" 
-  className="mx-auto w-full max-w-lg h-auto mix-blend-screen object-contain" 
+  className="mx-auto w-48 md:w-64 h-auto object-contain"
 />
         </div>
 

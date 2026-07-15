@@ -55,6 +55,12 @@ const galleryItems = [
     type: 'video', 
     url: FDTYRES, // Use the imported variable
     title: 'Full Tire Detailing' 
+  },
+{ 
+    id: 7, 
+    type: 'image', 
+    url: classic, // Use the imported variable
+    title: 'Classic Car Detailing' 
   }
 
 
