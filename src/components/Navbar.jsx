@@ -19,7 +19,7 @@ export default function Navbar() {
 
         {/* CTA Button */}
         <a 
-          href="#book" 
+          href="#booking" 
           className="bg-red-600 hover:bg-red-700 text-white font-bold px-5 py-2.5 rounded-lg text-xs uppercase tracking-widest transition-all duration-300 shadow-lg shadow-red-600/20"
         >
           Book Now
