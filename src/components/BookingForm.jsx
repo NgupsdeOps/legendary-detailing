@@ -14,6 +14,9 @@ export default function BookingForm() {
     agree: false
   });
 
+  // Track if the form has been successfully submitted to change layouts
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -30,14 +33,13 @@ export default function BookingForm() {
       return;
     }
 
-    // Prepare standard FormData so Formspree reads it perfectly
     const submissionData = new FormData();
     Object.keys(formData).forEach((key) => {
       submissionData.append(key, formData[key]);
     });
 
     try {
-      // ⚠️ REPLACE YOUR_FORMSPREE_ID_HERE WITH YOUR ACTUAL FORMSPREE KEY (e.g. xoqovwzd)
+      // ⚠️ Make sure your real Formspree ID is placed here (e.g., xanyvweb)
       const response = await fetch("https://formspree.io/f/mreneeyp", {
         method: "POST",
         body: submissionData,
@@ -47,8 +49,10 @@ export default function BookingForm() {
       });
 
       if (response.ok) {
-        alert("Booking request received successfully! We will contact you shortly.");
-        // Reset state
+        // Switch the view to the custom success message layout
+        setIsSubmitted(true);
+        
+        // Reset the form values back to empty defaults
         setFormData({
           name: '',
           phone: '',
@@ -69,6 +73,32 @@ export default function BookingForm() {
     }
   };
 
+  // 🌟 BEAUTIFUL SUCCESS MESSAGE LAYOUT 🌟
+  if (isSubmitted) {
+    return (
+      <section id="booking" className="py-16 px-4 bg-neutral-950 text-white text-center">
+        <div className="max-w-xl mx-auto bg-neutral-900 border border-neutral-800 p-8 md:p-12 rounded-3xl shadow-2xl space-y-6">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-600/10 text-red-600 border border-red-600/20 text-3xl font-bold animate-pulse">
+            ✓
+          </div>
+          <h2 className="text-2xl md:text-4xl font-black uppercase tracking-tight">
+            Booking <span className="text-red-600">Requested!</span>
+          </h2>
+          <p className="text-neutral-400 text-sm leading-relaxed">
+            Thank you for choosing <span className="text-white font-bold">Legendary Detailing</span>. We have received your request and will contact you via WhatsApp shortly to finalize your slot.
+          </p>
+          <button 
+            onClick={() => setIsSubmitted(false)}
+            className="w-full bg-neutral-950 border border-neutral-800 hover:border-red-600 text-white font-bold uppercase tracking-wider py-3 rounded-xl text-xs transition-colors duration-200"
+          >
+            Book Another Vehicle
+          </button>
+        </div>
+      </section>
+    );
+  }
+
+  // STANDARD FORM LAYOUT (Shows when isSubmitted is false)
   return (
     <section id="booking" className="py-16 px-4 md:px-8 bg-neutral-950 text-white">
       <div className="max-w-2xl mx-auto bg-neutral-900 border border-neutral-800 p-6 md:p-10 rounded-3xl shadow-2xl">
