@@ -8,10 +8,9 @@ import { PlayCircle, Sparkles } from 'lucide-react';
 // 2. IMPORT them at the top of this file.
 // ==========================================
 
-import carReflections from '../assets/wash1.png'; // Example Import
-import coatingApp from '../assets/wash2.png';      // Example Import
-import videoShowcase from '../assets/wash_video.mp4'; // Example Video Import
-
+import carReflections from '../assets/Wash1.png'; // Capital W to match your folder!
+import coatingApp from '../assets/hero.png';        // Using hero.png since wash2.png doesn't exist
+import videoShowcase from '../assets/enginewash.mp4'; // Using enginewash.mp4 instead of wash_video.mp4
 // This is how you reference them in your list:
 const galleryItems = [
   { 
