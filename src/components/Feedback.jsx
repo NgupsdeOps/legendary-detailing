@@ -6,7 +6,7 @@ export default function Feedback() {
   const [reviews, setReviews] = useState(() => {
     const saved = localStorage.getItem('detailing_reviews');
     return saved ? JSON.parse(saved) : [
-      { id: 1, name: "Sipho M.", comment: "The showroom polish completely brought my GTI back to life. Incredible attention to detail!", stars: 5 },
+      { id: 1, name: "Sipho M.", comment: "The showroom polish completely brought my car back to life. Incredible attention to detail!", stars: 5 },
       { id: 2, name: "Chantel K.", comment: "Super convenient mobile detailing valet service. They left my SUV immaculate.", stars: 5 }
     ];
   });
