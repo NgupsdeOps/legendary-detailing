@@ -15,6 +15,8 @@ import redgolf from '../assets/redgolf.png';
 import TSIENGINE from '../assets/TSIENGINE.png';
 import FDTYRES from '../assets/FDTYRES.mp4';
 import classic from '../assets/classic.png';
+import cartyre from '../assets/cartyre.png';
+import Interior from '../assets/Interior.png';
 
 // This is how you reference them in your list:
 
@@ -61,6 +63,18 @@ const galleryItems = [
     type: 'image', 
     url: classic, // Use the imported variable
     title: 'Classic Car Detailing' 
+  },
+{ 
+    id: 8, 
+    type: 'image', 
+    url: cartyre, // Use the imported variable
+    title: 'Car Tire Detailing' 
+  },
+{ 
+    id: 9, 
+    type: 'image', 
+    url: Interior, // Use the imported variable
+    title: 'Interior Detailing' 
   }
 
 

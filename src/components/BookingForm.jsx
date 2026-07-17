@@ -113,7 +113,7 @@ export default function BookingForm({ setModalType }) {
             Book <span className="text-red-600">Now</span>
           </h2>
           <p className="text-neutral-400 text-sm">
-            Secure your premium detailing service. We will confirm your slot via call or WhatsApp.
+            Secure your premium detailing service. We will confirm your slot via call/whatsapp or Email.
           </p>
         </div>
 
@@ -221,7 +221,7 @@ export default function BookingForm({ setModalType }) {
                 19 Alabaster ave, Mayfield Park (Location 1)
               </option>
               <option value="Alveda Park (Location 2)">
-                Alveda Park (Location 2)
+                121 Sycamore st, Alveda Park (Location 2)
               </option>
               <option value="Mobile Detailing (We come to you)">
                 Mobile Detailing (We come to you)
@@ -272,7 +272,7 @@ export default function BookingForm({ setModalType }) {
             </label>
             <textarea
               name="notes" value={formData.notes} onChange={handleChange} rows="3"
-              placeholder="Let us know if you have dog hair, heavy water stains, etc."
+              placeholder="Let us know if you have any specific requests, or concerns, etc."
               className="w-full bg-neutral-950 border border-neutral-800 focus:border-red-600 text-white px-4 py-3.5 rounded-xl transition-colors duration-200 resize-none"
             />
           </div>
