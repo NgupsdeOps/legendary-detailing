@@ -164,21 +164,27 @@ export default function BookingForm({ setModalType }) {
           </div>
 
           {/* Packages with Prices */}
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">
-              Select Package
-            </label>
-            <select
-              name="service" value={formData.service} onChange={handleChange}
-              className="w-full bg-neutral-950 border border-neutral-800 focus:border-red-600 text-white px-4 py-3.5 rounded-xl transition-colors duration-200"
-            >
-              <option value="Standard Detail - R250">Standard Detail — R250</option>
-              <option value="Premium Detail - R850">Premium Detail / Valet — R850</option>
-              <option value="Executive Valet - R1200">Executive Valet — R1200</option>
-              <option value="Machine Glaze & Polish - R1500">Machine Glaze & Polish — R1500</option>
-              <option value="Ceramic Coating Application - R3500">Ceramic Coating Application — R3500</option>
-            </select>
-          </div>
+         {/* Packages Matching Your Menu Exactly */}
+<div>
+  <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">
+    Select Package
+  </label>
+  <select
+    name="service" 
+    value={formData.service} 
+    onChange={handleChange}
+    className="w-full bg-neutral-950 border border-neutral-800 focus:border-red-600 text-white px-4 py-3.5 rounded-xl transition-colors duration-200"
+  >
+    <option value="Standard detail - from R250">Standard detail — from R250</option>
+    <option value="Premium detail - R500">Premium detail — R500</option>
+    <option value="Enhancement detail - R1500">Enhancement detail — R1500</option>
+    <option value="Stage 1 detail - from R2500">Stage 1 detail — from R2500</option>
+    <option value="Stage 2 detail - from R4500">Stage 2 detail — from R4500</option>
+    <option value="Full detail - From R1500">Full detail — From R1500</option>
+    <option value="Undercarriage - from R300">Undercarriage — from R300</option>
+    <option value="Engine detail - from R200">Engine detail — from R200</option>
+  </select>
+</div>
 
           {/* Optional Extras Checkboxes */}
           <div>
