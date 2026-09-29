@@ -1,37 +1,27 @@
 import React, { useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import Services from './components/Services';
-import Gallery from './components/Gallery';
-import Feedback from './components/Feedback';
-import BookingForm from './components/BookingForm';
 import Footer from './components/Footer';
+import Home from './pages/Home';
+import GalleryPage from './pages/GalleryPage';
 import LegalModal from './components/LegalModal';
 
 export default function App() {
-  // Shared pop-up state
-  const [modalType, setModalType] = useState(null); // 'privacy', 'terms', or null
+  const [modalType, setModalType] = useState(null);
 
-return (
-  <div className="min-h-screen bg-neutral-950 text-neutral-200 font-sans overflow-x-hidden w-full max-w-full block">
-    <Navbar />
-    <Hero />
-    <Services />
-    <Gallery />
-    <Feedback />
-    
-    {/* Passing the popup control down to the booking form */}
-    <BookingForm setModalType={setModalType} />
-    
-    {/* Passing the popup control down to the footer */}
-    <Footer setModalType={setModalType} />
-    
-    {/* The Pop-up itself is rendered at the root level */}
-    <LegalModal
-      isOpen={modalType !== null}
-      onClose={() => setModalType(null)}
-      type={modalType}
-    />
-  </div>
-);
+  return (
+    <div className="bg-neutral-950 text-white min-h-screen flex flex-col font-sans">
+      <Navbar />
+
+      <div className="flex-grow">
+        <Routes>
+          <Route path="/" element={<Home setModalType={setModalType} />} />
+          <Route path="/gallery" element={<GalleryPage />} />
+        </Routes>
+      </div>
+
+      <Footer setModalType={setModalType} />
+      {modalType && <LegalModal modalType={modalType} onClose={() => setModalType(null)} />}
+    </div>
+  );
 }
