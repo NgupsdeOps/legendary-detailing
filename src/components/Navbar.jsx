@@ -39,6 +39,10 @@ export default function Navbar() {
             Gallery
           </Link>
 
+          <Link to="/blog" className="text-white hover:text-red-500 transition-colors">
+            Blog
+          </Link>
+
           <a 
             href="/#booking" 
             className="bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition-all transform hover:scale-105"
