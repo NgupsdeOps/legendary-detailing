@@ -1,31 +1,35 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { blogPosts } from '../blogData';
 
 export default function BlogPost() {
   const { id } = useParams();
   const post = blogPosts.find((p) => p.id === id);
-  const commentsContainerRef = useRef(null);
 
   useEffect(() => {
-    if (!commentsContainerRef.current) return;
+    // If Disqus is already loaded on the page, reset it for the new article ID
+    if (window.DISQUS) {
+      window.DISQUS.reset({
+        reload: true,
+        config: function () {
+          this.page.url = window.location.href;
+          this.page.identifier = id;
+        },
+      });
+    } else {
+      // Otherwise, load the Disqus script for the first time
+      window.disqus_config = function () {
+        this.page.url = window.location.href;
+        this.page.identifier = id;
+      };
 
-    // Clear previous comments container if route changes
-    commentsContainerRef.current.innerHTML = '<div id="disqus_thread"></div>';
-
-    // Configure and load Disqus script natively
-    window.disqus_config = function () {
-      this.page.url = window.location.href;
-      this.page.identifier = id;
-    };
-
-    const d = document;
-    const s = d.createElement('script');
-    s.src = 'https://legendarydetailing-autos.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    s.async = true;
-    
-    d.head.appendChild(s);
+      const d = document;
+      const s = d.createElement('script');
+      s.src = 'https://legendarydetailing-autos.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      s.async = true;
+      d.head.appendChild(s);
+    }
   }, [id]);
 
   if (!post) {
@@ -58,9 +62,7 @@ export default function BlogPost() {
       {/* Disqus Comments Section */}
       <section className="border-t border-neutral-800 pt-8 mt-12">
         <h3 className="text-xl font-bold text-white mb-6">Customer Discussion & Comments</h3>
-        <div ref={commentsContainerRef}>
-          <div id="disqus_thread"></div>
-        </div>
+        <div id="disqus_thread"></div>
       </section>
     </article>
   );
